@@ -1,0 +1,103 @@
+'use client';
+
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
+import { createClient } from '@/lib/supabase/client';
+import { compressImage } from '@/lib/utils/image';
+import CameraCapture from '@/components/setup/CameraCapture';
+
+export default function PrescriptionUploadPage() {
+  const t = useTranslations('setup');
+  const router = useRouter();
+  const supabase = createClient();
+  
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState('');
+
+  const handlePhotoCapture = async (file: File) => {
+    setIsProcessing(true);
+    setError('');
+
+    try {
+      // 1. Show local preview
+      setPhotoPreview(URL.createObjectURL(file));
+
+      // 2. Compress image using Canvas API
+      const compressedBlob = await compressImage(file, 1200, 0.8);
+      const compressedFile = new File([compressedBlob], `prescription_${Date.now()}.jpg`, { type: 'image/jpeg' });
+
+      // 3. Upload to Supabase Storage
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) throw new Error("You must be logged in to upload a prescription.");
+
+      const filePath = `${userData.user.id}/${compressedFile.name}`;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('prescriptions')
+        .upload(filePath, compressedFile);
+
+      if (uploadError) throw new Error("Failed to upload image. Please ensure the 'prescriptions' storage bucket is created and public in your Supabase dashboard.");
+
+      // Example of getting public URL (we will send this to OCR route later)
+      const { data: publicUrlData } = supabase.storage.from('prescriptions').getPublicUrl(filePath);
+      console.log('Uploaded successfully:', publicUrlData.publicUrl);
+
+      // (In the next step, we will call the OCR API with this URL. For now, we simulate success)
+      alert("Image compressed and uploaded successfully to Supabase Storage!");
+      
+      // router.push('/setup/medicines');
+    } catch (err: any) {
+      setError(err.message || "An unknown error occurred.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background p-4 pb-20">
+      <header className="py-6 mb-4">
+        <h1 className="text-2xl font-bold text-[var(--color-primary)]">Setup Wizard</h1>
+        <p className="text-gray-500 mt-1">Step 1 of 3</p>
+      </header>
+      
+      <main className="space-y-6">
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <h2 className="text-xl font-bold mb-2">{t('step1')}</h2>
+          <p className="text-gray-600 mb-6">
+            To get started, please take a clear photograph of the doctor's prescription. We will automatically extract the medicines for you.
+          </p>
+
+          {error && (
+            <div className="p-3 mb-6 bg-red-50 text-red-600 rounded-lg text-sm font-medium border border-red-100">
+              {error}
+            </div>
+          )}
+
+          {photoPreview ? (
+            <div className="space-y-4">
+              <img src={photoPreview} alt="Prescription preview" className="w-full h-64 object-cover rounded-xl border border-gray-200" />
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => setPhotoPreview(null)}
+                  className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl active:bg-gray-200 transition-colors"
+                >
+                  Retake
+                </button>
+                <button 
+                  disabled={isProcessing}
+                  className="flex-1 py-3 bg-[var(--color-primary)] text-white font-bold rounded-xl active:opacity-80 transition-opacity disabled:opacity-50"
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          ) : (
+            <CameraCapture onCapture={handlePhotoCapture} isLoading={isProcessing} />
+          )}
+
+        </div>
+      </main>
+    </div>
+  );
+}
