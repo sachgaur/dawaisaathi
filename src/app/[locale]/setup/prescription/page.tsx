@@ -39,14 +39,37 @@ export default function PrescriptionUploadPage() {
 
       if (uploadError) throw new Error("Failed to upload image. Please ensure the 'prescriptions' storage bucket is created and public in your Supabase dashboard.");
 
-      // Example of getting public URL (we will send this to OCR route later)
+      // 4. Get Public URL
       const { data: publicUrlData } = supabase.storage.from('prescriptions').getPublicUrl(filePath);
-      console.log('Uploaded successfully:', publicUrlData.publicUrl);
-
-      // (In the next step, we will call the OCR API with this URL. For now, we simulate success)
-      alert("Image compressed and uploaded successfully to Supabase Storage!");
       
-      // router.push('/setup/medicines');
+      // 5. Connect to Google Cloud Vision API
+      const ocrResponse = await fetch('/api/ocr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl: publicUrlData.publicUrl }),
+      });
+      const ocrData = await ocrResponse.json();
+
+      if (!ocrResponse.ok) throw new Error(ocrData.error || 'Failed to read prescription text via OCR');
+
+      // 6. Save the prescription record to the database
+      const { data: caregiver } = await supabase.from('caregivers').select('patient_id').eq('user_id', userData.user.id).limit(1).single();
+      
+      const { data: prescription, error: prescriptionError } = await supabase
+        .from('prescriptions')
+        .insert({
+          patient_id: caregiver?.patient_id,
+          photo_url: publicUrlData.publicUrl,
+          ocr_raw_text: ocrData.rawText,
+          created_by: userData.user.id
+        })
+        .select()
+        .single();
+      
+      if (prescriptionError) throw new Error("Failed to save prescription to database: " + prescriptionError.message);
+
+      // 7. Route to the Medicine Review screen
+      router.push(`/setup/medicines?prescription_id=${prescription.id}`);
     } catch (err: any) {
       setError(err.message || "An unknown error occurred.");
     } finally {
