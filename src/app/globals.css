@@ -1,21 +1,43 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* DawaiSathi Custom Colors */
+  --color-morning-bg: #FFF8E1;
+  --color-morning-accent: #F9A825;
+  --color-morning-text: #5D4037;
+
+  --color-afternoon-bg: #E3F2FD;
+  --color-afternoon-accent: #1976D2;
+  --color-afternoon-text: #0D47A1;
+
+  --color-evening-bg: #FFF3E0;
+  --color-evening-accent: #E65100;
+  --color-evening-text: #BF360C;
+
+  --color-night-bg: #E8EAF6;
+  --color-night-accent: #283593;
+  --color-night-text: #1A237E;
+
+  --color-given: #4CAF50;
+  --color-skipped: #FFC107;
+  --color-missed: #F44336;
+  --color-primary: #1B5E7B;
+}
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0f172a;
+    --foreground: #f8fafc;
   }
 }
 
@@ -23,4 +45,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

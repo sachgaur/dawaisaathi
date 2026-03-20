@@ -1,0 +1,19 @@
+{
+  "dashboard": {
+    "title": "आज की दवाइयाँ",
+    "morning": "सुबह",
+    "afternoon": "दोपहर",
+    "evening": "शाम",
+    "night": "रात",
+    "markGiven": "दवाई दी",
+    "markSkipped": "छोड़ी",
+    "givenBy": "{name} ने दी",
+    "tablets": "{count} गोली",
+    "offlineNotice": "आप ऑफ़लाइन हैं — दवाई की जानकारी अभी भी दिख रही है"
+  },
+  "setup": {
+    "step1": "पर्ची की फ़ोटो लें",
+    "step2": "दवाई की फ़ोटो लें",
+    "step3": "समय तय करें"
+  }
+}

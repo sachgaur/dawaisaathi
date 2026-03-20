@@ -1,0 +1,19 @@
+{
+  "dashboard": {
+    "title": "Today's Medicines",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "night": "Night",
+    "markGiven": "Given",
+    "markSkipped": "Skipped",
+    "givenBy": "Given by {name}",
+    "tablets": "{count} tablet",
+    "offlineNotice": "You're offline — schedule still works"
+  },
+  "setup": {
+    "step1": "Photograph Prescription",
+    "step2": "Photograph Medicine",
+    "step3": "Set Timing"
+  }
+}
