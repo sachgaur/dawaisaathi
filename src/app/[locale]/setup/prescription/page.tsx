@@ -13,19 +13,24 @@ export default function PrescriptionUploadPage() {
   const supabase = createClient();
   
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
 
-  const handlePhotoCapture = async (file: File) => {
+  const handlePhotoCapture = (file: File) => {
+    setSelectedFile(file);
+    setPhotoPreview(URL.createObjectURL(file));
+    setError('');
+  };
+
+  const handleConfirmUpload = async () => {
+    if (!selectedFile) return;
     setIsProcessing(true);
     setError('');
 
     try {
-      // 1. Show local preview
-      setPhotoPreview(URL.createObjectURL(file));
-
       // 2. Compress image using Canvas API
-      const compressedBlob = await compressImage(file, 1200, 0.8);
+      const compressedBlob = await compressImage(selectedFile, 1200, 0.8);
       const compressedFile = new File([compressedBlob], `prescription_${Date.now()}.jpg`, { type: 'image/jpeg' });
 
       // 3. Upload to Supabase Storage
@@ -102,16 +107,17 @@ export default function PrescriptionUploadPage() {
               <img src={photoPreview} alt="Prescription preview" className="w-full h-64 object-cover rounded-xl border border-gray-200" />
               <div className="flex gap-2">
                 <button 
-                  onClick={() => setPhotoPreview(null)}
+                  onClick={() => { setPhotoPreview(null); setSelectedFile(null); }}
                   className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl active:bg-gray-200 transition-colors"
                 >
                   Retake
                 </button>
                 <button 
+                  onClick={handleConfirmUpload}
                   disabled={isProcessing}
                   className="flex-1 py-3 bg-[var(--color-primary)] text-white font-bold rounded-xl active:opacity-80 transition-opacity disabled:opacity-50"
                 >
-                  Confirm
+                  {isProcessing ? 'Analyzing AI...' : 'Confirm'}
                 </button>
               </div>
             </div>
