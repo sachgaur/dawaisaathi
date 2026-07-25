@@ -6,34 +6,6 @@ Powered by **Google Gemini 2.0 Flash**, **Flask**, and **React (Vite PWA)**, Daw
 
 ---
 
-## 🧹 Repository Audit & Cleanup Recommendations
-
-During the repository audit, the following **unnecessary, redundant, or leftover files** were identified. Removing these files will clean up the project root and prevent repository bloat.
-
-> **Note:** As per instructions, no files have been deleted automatically. You can safely run the cleanup commands listed below.
-
-| Path | Category | Reason for Cleanup |
-|---|---|---|
-| `.next/` | Leftover Build Artifact | Unused build/cache directory from an earlier Next.js prototype. Current frontend is React Vite (`frontend/`). |
-| `.env.local` & `.env.local.example` | Obsolete Config | Next.js/Supabase environment files left in project root. Active configuration uses `backend/.env`. |
-| `test image.jpeg` | Temporary Asset | 289 KB test prescription photo lying loose in root. |
-| `backend/source/` | Committed Virtualenv | Committed Python virtual environment binaries (`bin/`, `lib/`, `pyvenv.cfg`). Should be generated locally. |
-| `backend/venv/` | Committed Virtualenv | Committed Python virtual environment binaries inside `backend/`. Should be generated locally. |
-| `backend/instance/dawaisaathi.db` | Local Database | Committed SQLite development database. Databases should be runtime-generated and ignored by Git. |
-| `frontend/dist/` | Build Output | Vite production output folder committed into Git. |
-| `.DS_Store` | OS Metadata | macOS directory metadata files in root and subdirectories. |
-
-### Recommended Cleanup Terminal Command
-
-```bash
-# Run from repository root to clean up identified unnecessary files:
-rm -rf .next .env.local .env.local.example "test image.jpeg"
-rm -rf backend/source backend/venv backend/instance/dawaisaathi.db
-rm -rf frontend/dist
-find . -name ".DS_Store" -depth -exec rm {} \;
-```
-
----
 
 ## 🏗️ Architecture & Tech Stack
 
