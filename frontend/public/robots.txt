@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /auth/success
+
+Sitemap: https://qflq30jf-5173.inc1.devtunnels.ms/sitemap.xml
