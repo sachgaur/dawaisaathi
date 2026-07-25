@@ -121,6 +121,15 @@ npm run dev
 
 Frontend application runs at **`http://localhost:5173`**.
 
+#### Build & Preview for Production
+
+To test the compiled production PWA bundle and service worker before deployment:
+
+```bash
+npm run build     # Compiles TypeScript and builds production PWA bundle
+npm run preview   # Serves the production build at http://localhost:4173
+```
+
 ---
 
 ## 🔐 Google Cloud OAuth Setup
@@ -152,7 +161,7 @@ In the [Google Cloud Console](https://console.cloud.google.com/) → **APIs & Se
 dawaisaathi/
 ├── Architecture_Design.md        # Technical architecture design
 ├── PRESENTATION.md               # Project presentation details
-├── README.md                     # Project documentation & audit report
+├── README.md                     # Project README & documentation
 ├── UPGRADES.md                   # Product roadmap & market analysis
 ├── features_for_dawaisaithi.md   # Product requirements (PRD)
 ├── ui_design/                    # UI mockups and design references

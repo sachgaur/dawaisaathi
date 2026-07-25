@@ -1,7 +1,7 @@
 import os
 import json
 import base64
-from datetime import datetime, date
+from datetime import datetime, date, time, timedelta
 from flask import Blueprint, request, jsonify, send_from_directory, current_app
 from extensions import db
 from models import User, MedicineEntry, MedicineLog
@@ -299,9 +299,8 @@ def log_medicine():
     now_utc = datetime.utcnow()
     user_local = now_utc - timedelta(minutes=tz_offset)
     
-    from datetime import time as dt_time, timedelta as dt_timedelta
-    scheduled_time = datetime.combine(user_local.date(), dt_time(h, m))
-    allowed_start = scheduled_time - dt_timedelta(minutes=30)
+    scheduled_time = datetime.combine(user_local.date(), time(h, m))
+    allowed_start = scheduled_time - timedelta(minutes=30)
     
     if user_local < allowed_start:
         wait_seconds = (allowed_start - user_local).total_seconds()

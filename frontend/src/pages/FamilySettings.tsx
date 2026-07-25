@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../context/AuthContext'
 import AppLayout from '../components/AppLayout'
 import api from '../api/client'
@@ -79,7 +79,6 @@ export default function FamilySettings() {
   }
 
   const inFamily = !!user?.family_id
-  const myMembers = inFamily ? members : []
 
   return (
     <>

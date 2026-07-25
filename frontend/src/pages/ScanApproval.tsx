@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Header from '../components/Header'
@@ -38,6 +38,7 @@ export default function ScanApproval() {
         schedule?: TimeSlot[]
         days?: number | null
         instructions?: string | null
+        unparsed_lines?: string[]
         medicines?: Array<{
           name: string | null
           dosage: string | null

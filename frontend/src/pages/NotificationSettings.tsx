@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ArrowLeft, Bell, BellOff, MessageCircle, Clock,
@@ -175,9 +175,9 @@ export default function NotificationSettings() {
       try {
         sub = await sw.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: await urlBase64ToUint8Array(vapidKey),
+          applicationServerKey: (await urlBase64ToUint8Array(vapidKey)) as BufferSource,
         })
-      } catch (subErr: any) {
+      } catch {
         // Detect Brave — it blocks pushManager.subscribe() when Shields are up
         const isBrave = 'brave' in navigator && typeof (navigator as any).brave?.isBrave === 'function'
           ? await (navigator as any).brave.isBrave()

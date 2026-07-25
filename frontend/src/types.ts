@@ -13,7 +13,7 @@ export interface Family {
   created_at: string
 }
 
-export interface FamilyMember extends User {}
+export type FamilyMember = User
 
 export interface JoinRequest {
   id: number

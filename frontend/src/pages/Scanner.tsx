@@ -1,8 +1,7 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react'
+import { useRef, useState, useCallback } from 'react'
 import Webcam from 'react-webcam'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import Header from '../components/Header'
 import api from '../api/client'
 import { Zap, ZapOff, Camera, X, Upload, Pencil } from 'lucide-react'
 
@@ -12,7 +11,6 @@ export default function Scanner() {
   const { activeMemberId } = useAuth()
   const [capturing, setCapturing] = useState(false)
   const [cameraError, setCameraError] = useState(false)
-  const [inboxCount, setInboxCount] = useState(0)
   const [flashActive, setFlashActive] = useState(false)
   const [capturedPreview, setCapturedPreview] = useState<string | null>(null)
 
@@ -33,16 +31,6 @@ export default function Scanner() {
       console.error('Failed to toggle flash', err)
     }
   }
-
-  useEffect(() => {
-    const fetchInbox = async () => {
-      try {
-        const res = await api.get('/family/inbox')
-        setInboxCount(res.data.requests?.length ?? 0)
-      } catch {}
-    }
-    fetchInbox()
-  }, [])
 
   const handleCapture = useCallback(async () => {
     if (capturing) return

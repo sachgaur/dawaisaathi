@@ -1,4 +1,3 @@
-import React from 'react'
 import { Pill } from 'lucide-react'
 
 export default function AuthGate() {
